@@ -1,5 +1,9 @@
 import jade.core.Agent;
 import jade.core.behaviours.*;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import jade.lang.acl.*;
 
 import java.util.*;
@@ -11,6 +15,17 @@ public class BookSellerAgent extends Agent {
 
   protected void setup() {
     catalogue = new Hashtable<>();
+
+    DFAgentDescription dfd = new DFAgentDescription();
+    dfd.setName(getAID());
+    ServiceDescription sd = new ServiceDescription();
+    sd.setType("Book-selling");
+    sd.setName(getLocalName()+"-Book-selling");
+    dfd.addServices(sd);
+    try {
+      DFService.register(this, dfd);
+    } catch (FIPAException fe) {
+      fe.printStackTrace(); }
 
     Random randomGenerator = new Random();
 

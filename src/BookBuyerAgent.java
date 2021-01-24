@@ -2,17 +2,34 @@ import jade.core.Agent;
 import jade.core.AID;
 import jade.core.behaviours.*;
 import jade.lang.acl.*;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 
 public class BookBuyerAgent extends Agent {
 
   private String targetBookTitle;
   // może być dostarczane dynamicznie za pomocą DF
+
   private AID[] sellerAgents = {
 //            new AID("seller1", AID.ISLOCALNAME),
           new AID("seller2", AID.ISLOCALNAME)};
 
   protected void setup() {
     //doWait(2000);
+
+    DFAgentDescription template = new DFAgentDescription();
+    ServiceDescription sd = new ServiceDescription();
+    sd.setType("Book-selling");
+    template.addServices(sd);
+    try {
+      DFAgentDescription[] result = DFService.search(myAgent, template);
+    } catch (FIPAException fe) {
+      fe.printStackTrace();
+    }
+
+    sellerAgents = result;
 
     System.out.println("Witam! Agent kupujący "+getAID().getName()+" (wersja a <2020/21>) jest gotów!");
 
